@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0x52415546 // RaufFathi [CyberRFG] - Cyber Security & Python Specialist</title>
+    <meta name="description"
+        content="Rauf Fathi Govashin (0x52415546 / CyberRFG) - Cybersecurity & Python Automation Engineer Portfolio">
+
+    <link rel="icon" href="https://rauffathigovashin.github.io/assets/favicon.png" type="image/png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Orbitron:wght@600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="cyber-theme">
+
+    <div id="cursor-dot" class="cursor-dot"></div>
+    <div id="cursor-outline" class="cursor-outline"></div>
+
+    <canvas id="matrix-background"></canvas>
+
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="hex-logo-glitch" data-text="0x52415546 // CyberRFG">0x52415546 // CyberRFG</div>
+            <p class="preloader-status"><span id="preloader-text">Loading CyberRFG Matrix Core</span><span
+                    class="dots">...</span></p>
+            <div class="preloader-bar-wrapper">
+                <div class="preloader-bar-fill" id="preloader-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <header class="navbar-wrapper">
+        <nav class="navbar">
+            <a href="#hero" class="nav-brand">
+                <span class="brand-hex">0x52415546</span>
+                <span class="brand-divider">//</span>
+                <span class="brand-nick">RaufFathi</span>
+                <span class="brand-sub">[CyberRFG]</span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#hero" class="nav-item active">Overview</a></li>
+                <li><a href="#portfolio" class="nav-item">Projects</a></li>
+                <li><a href="#contact" class="nav-item">Contact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="theme-switcher-custom">
+                    <button id="theme-menu-btn" class="btn-theme-dropdown">
+                        <span class="theme-color-indicator dot-cyan" id="active-theme-dot"></span>
+                        <span id="active-theme-name" class="theme-name-text">ELECTRIC CYAN</span>
+                        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                    </button>
+
+                    <div id="theme-dropdown-menu" class="theme-dropdown-menu">
+                        <button class="theme-opt-btn" data-theme="cyan">
+                            <span class="theme-color-indicator dot-cyan"></span>
+                            <span>ELECTRIC CYAN</span>
+                        </button>
+                        <button class="theme-opt-btn" data-theme="green">
+                            <span class="theme-color-indicator dot-green"></span>
+                            <span>CYBER GREEN</span>
+                        </button>
+                        <button class="theme-opt-btn" data-theme="crimson">
+                            <span class="theme-color-indicator dot-crimson"></span>
+                            <span>CRIMSON RED</span>
+                        </button>
+                        <button class="theme-opt-btn" data-theme="purple">
+                            <span class="theme-color-indicator dot-purple"></span>
+                            <span>NEON PURPLE</span>
+                        </button>
+                        <button class="theme-opt-btn" data-theme="amber">
+                            <span class="theme-color-indicator dot-amber"></span>
+                            <span>AMBER GOLD</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button id="btn-open-terminal" class="btn-cyber-outline" title="Terminal CLI Console">
+                    <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="4 17 10 11 4 5" />
+                        <line x1="12" y1="19" x2="20" y2="19" />
+                    </svg>
+                    Console CLI
+                </button>
+                <button id="btn-admin-login" class="btn-cyber-solid" title="Supabase Admin">
+                    <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    <span id="admin-btn-text">Admin Login</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+
+        <section id="hero" class="section-hero">
+            <div class="hero-container">
+
+                <div class="hero-content">
+                    <div class="status-pill" id="custom-status">
+                        <span class="status-dot"></span>
+                        <span id="status-display">Status: <strong>Kiber Təhlükəsizlik öyrənirəm</strong></span>
+                    </div>
+
+                    <h1 class="hero-title">
+                        CYBER DEFENSE & <br>
+                        <span class="gradient-text">PYTHON AUTOMATION</span> ENGINEER
+                    </h1>
+
+                    <h2 class="hero-subtitle">
+                        Rauf Fathi Govashin (RaufFathi) — <span id="typing-effect"></span>
+                    </h2>
+
+                    <p class="hero-description">
+                        Specializing in automated vulnerability scanning, threat intelligence tools, network penetration
+                        testing scripts, and secure fullstack integrations. Welcome to 0x52415546 portfolio.
+                    </p>
+
+                    <div class="hero-cta-group">
+                        <a href="#portfolio" class="btn-cyber-cta">
+                            Explore Repositories
+                            <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                                <polyline points="12 5 19 12 12 19" />
+                            </svg>
+                        </a>
+                        <a href="#contact" class="btn-cyber-ghost">Send Message</a>
+                    </div>
+
+                    <div class="stats-counter-bar">
+                        <div class="stat-card">
+                            <span class="stat-value" id="github-repos">16</span>
+                            <span class="stat-label">PUBLIC REPOSITORIES</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="github-stars">--</span>
+                            <span class="stat-label">GITHUB STARS</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="github-followers">--</span>
+                            <span class="stat-label">FOLLOWERS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-visual">
+                    <div class="cyber-profile-card enlarged-profile-card">
+                        <div class="profile-card-header">
+                            <span class="card-status-dot"></span>
+                            <span class="card-status-title">0x52415546 // WORKSTATION OPERATIONAL</span>
+                        </div>
+                        <div class="avatar-wrapper enlarged-avatar">
+                            <img src="https://rauffathigovashin.github.io/assets/Gemini_Generated_Image_75jyvq75jyvq75jy.png"
+                                alt="Rauf Fathi Govashin (0x52415546)" class="profile-avatar"
+                                onerror="this.src='https://secure.gravatar.com/avatar/d6e53a055695ad6488b32a6ac4f6ee5d?s=256';">
+                        </div>
+                        <div class="profile-info">
+                            <h3 class="profile-name enlarged-name">Rauf Fathi Govashin</h3>
+                            <p class="profile-handle enlarged-handle">RaufFathi <span
+                                    style="color:var(--color-cyan)">[CyberRFG]</span></p>
+
+                            <p class="profile-bio-text">
+                                Python & Cybersecurity Developer building automated vulnerability scanners, OSINT
+                                spiders & security utilities.
+                            </p>
+
+                            <div class="profile-tags enlarged-tags">
+                                <span class="tag-badge">0x52415546</span>
+                                <span class="tag-badge">Python 3.12</span>
+                                <span class="tag-badge">Ethical Hacking</span>
+                                <span class="tag-badge">Linux Core</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="section-hud-matrix">
+            <div class="hud-matrix-grid">
+                <div class="hud-card">
+                    <div class="card-header-sm">
+                        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                        <span>THREAT SHIELD</span>
+                    </div>
+                    <div class="card-metric-val text-green">100% PROTECTED</div>
+                    <div class="card-metric-desc">Firewall & vulnerability inspection active</div>
+                </div>
+
+                <div class="hud-card">
+                    <div class="card-header-sm">
+                        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        <span>PRIMARY CORE</span>
+                    </div>
+                    <div class="card-metric-val text-cyan">PYTHON 3.12</div>
+                    <div class="card-metric-desc">Scapy, BeautifulSoup, Socket, Requests</div>
+                </div>
+
+                <div class="hud-card">
+                    <div class="card-header-sm">
+                        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                            <polyline points="2 17 12 22 22 17" />
+                            <polyline points="2 12 12 17 22 12" />
+                        </svg>
+                        <span>DISCORD RPC & DISCORD BOT</span>
+                    </div>
+                    <div class="card-metric-val text-yellow">DISCORD CONNECTED</div>
+                    <div class="card-metric-desc">Direct Webhook & Message Dispatch active</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="section-projects">
+            <div class="section-header-left">
+                <span class="section-kicker">// FEATURED REPOSITORIES & TOOLS</span>
+                <h2 class="section-heading">Cyber Security Tools & Scripts</h2>
+                <p class="section-subtext">16 Open Source Python & Cybersecurity Repositories.</p>
+            </div>
+
+            <div class="cyber-projects-grid" id="portfolio-grid">
+            </div>
+        </section>
+
+        <section id="contact" class="section-contact">
+            <div class="contact-card">
+                <span class="section-kicker">// DISCORD & COMMUNICATION</span>
+                <h2 class="section-heading">Send a Message</h2>
+                <p>Have a security project, Python automation request, or collaboration in mind? Send a direct message
+                    or connect below.</p>
+
+                <form id="discord-contact-form" class="discord-form">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label>Your Name / Handle</label>
+                            <input type="text" id="contact-name" placeholder="e.g. Alex (CyberSec)" required
+                                class="input-field">
+                        </div>
+                        <div class="form-field">
+                            <label>Email or Discord Tag</label>
+                            <input type="text" id="contact-tag" placeholder="e.g. user#1337 or alex@gmail.com" required
+                                class="input-field">
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label>Message Content</label>
+                        <textarea id="contact-msg" rows="4" placeholder="Write your message here..." required
+                            class="input-field"></textarea>
+                    </div>
+
+                    <button type="submit" id="btn-send-discord" class="btn-cyber-cta" style="margin-top:1rem;">
+                        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13" />
+                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                        </svg>
+                        Send Discord Message
+                    </button>
+                    <div id="discord-form-status" class="form-status-msg"></div>
+                </form>
+
+                <div class="contact-buttons-row">
+                    <a href="https://github.com/Rauffathigovashin" target="_blank" rel="noopener"
+                        class="btn-contact-item">
+                        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path
+                                d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+                        </svg>
+                        GitHub Repository
+                    </a>
+                    <a href="https://www.instagram.com/rauffathigovashin/" target="_blank" rel="noopener"
+                        class="btn-contact-item">
+                        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                        </svg>
+                        Instagram Profile
+                    </a>
+                    <a href="mailto:rauffathigovashin@gmail.com" class="btn-contact-item">
+                        <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                        Send Email
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="terminal-drawer" class="terminal-drawer">
+        <div class="terminal-drawer-header">
+            <span class="drawer-title">
+                <svg class="svg-icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="4 17 10 11 4 5" />
+                    <line x1="12" y1="19" x2="20" y2="19" />
+                </svg>
+                0x52415546_console // root@rauffathi-cyberrfg:~#
+            </span>
+            <button id="btn-close-terminal" class="btn-close-drawer">✕ Close</button>
+        </div>
+        <div class="terminal-drawer-body" id="terminal-body">
+            <div id="terminal-output"></div>
+            <div class="prompt-row">
+                <span class="prompt-user">root@rauffathi-cyberrfg</span><span class="prompt-colon">:</span><span
+                    class="prompt-path">~</span><span class="prompt-symbol">#</span>
+                <input type="text" id="terminal-input" autocomplete="off" spellcheck="false"
+                    placeholder="Type help, nmap, shodan, skills, projects, theme, matrix...">
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="admin-modal-title">Supabase Admin Portal</h3>
+                <button id="close-admin" class="btn-close-modal">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <div id="admin-login-fields" class="form-group">
+                    <label>Username / Email Address</label>
+                    <input type="email" id="admin-email"
+                        placeholder="Username / Email (e.g. rauffathigovashin@gmail.com)" class="input-field">
+                    <label>Password</label>
+                    <input type="password" id="admin-pass" placeholder="Password (••••••••)" class="input-field">
+                </div>
+
+                <div id="admin-tab-buttons" class="admin-tab-row hidden">
+                    <button class="admin-tab-btn active" data-tab="status">Update Status</button>
+                    <button class="admin-tab-btn" data-tab="add">Add Project</button>
+                    <button class="admin-tab-btn" data-tab="delete">Delete Project</button>
+                </div>
+
+                <div id="admin-status-fields" class="form-group hidden">
+                    <label>Update Live Status Message</label>
+                    <input type="text" id="status-text-input" placeholder="e.g. Kiber Təhlükəsizlik öyrənirəm..."
+                        class="input-field">
+                </div>
+
+                <div id="admin-project-fields" class="form-group hidden">
+                    <label>Project Name</label>
+                    <input type="text" id="proj-name" placeholder="RFG-SecuritySuite" class="input-field">
+                    <label>Description</label>
+                    <textarea id="proj-desc" placeholder="Advanced vulnerability scanner..."
+                        class="input-field"></textarea>
+                    <label>Image URL</label>
+                    <input type="text" id="proj-img" placeholder="https://images.unsplash.com/..." class="input-field">
+                    <label>GitHub Link</label>
+                    <input type="text" id="proj-github" placeholder="https://github.com/..." class="input-field">
+                    <label>Tags (comma separated)</label>
+                    <input type="text" id="proj-tags" placeholder="Python, Cybersecurity, OSINT" class="input-field">
+                </div>
+
+                <div id="admin-delete-fields" class="form-group hidden">
+                    <label>Select Project to Delete</label>
+                    <select id="delete-proj-select" class="input-field" style="background:#0c101c; color:#fff;">
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="save-admin" class="btn-cyber-solid">Authenticate Login</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="cyber-footer">
+        <p>0x52415546 Portfolio &copy;
+            <script>document.write(new Date().getFullYear())</script> Rauf Fathi Govashin (RaufFathi / CyberRFG). All
+            rights reserved.
+        </p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
