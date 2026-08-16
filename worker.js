@@ -136,7 +136,36 @@ export default {
                 const { rows } = await queryTurso('SELECT discord_webhook FROM portfolio_config WHERE id = 1 LIMIT 1');
                 const webhook = rows[0]?.discord_webhook;
 
-                return new Response(JSON.stringify({ success: true, webhook }), {
+                let discordSent = false;
+                if (webhook) {
+                    const discordData = {
+                        embeds: [{
+                            title: "📩 New Support Message (Discord)",
+                            color: 5814783,
+                            fields: [
+                                { name: "👤 Sender", value: `${name} (${contact || 'N/A'})`, inline: true },
+                                { name: "💬 Message", value: message }
+                            ],
+                            timestamp: new Date().toISOString(),
+                            footer: { text: "CyberRFG Portfolio System" }
+                        }]
+                    };
+
+                    try {
+                        const discordRes = await fetch(webhook, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(discordData)
+                        });
+                        if (discordRes.ok || discordRes.status === 204) {
+                            discordSent = true;
+                        }
+                    } catch (err) {
+                        console.error('Discord fetch error:', err);
+                    }
+                }
+
+                return new Response(JSON.stringify({ success: true, discordSent }), {
                     headers: { ...corsHeaders, 'Content-Type': 'application/json' }
                 });
             }

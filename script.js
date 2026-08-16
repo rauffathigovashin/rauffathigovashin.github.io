@@ -402,61 +402,31 @@ document.addEventListener('DOMContentLoaded', function () {
             if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending...'; }
 
             try {
-                let targetWebhookUrl = null;
-
                 if (WORKER_API_URL) {
-                    try {
-                        const res = await fetch(`${WORKER_API_URL}/api/contact`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ name, contact: tag, message })
-                        });
-                        if (res.ok) {
-                            const data = await res.json();
-                            if (data.webhook) targetWebhookUrl = data.webhook;
+                    const res = await fetch(`${WORKER_API_URL}/api/contact`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, contact: tag, message })
+                    });
+
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (formStatus) {
+                            if (data.discordSent) {
+                                formStatus.innerHTML = `<span style="color:var(--color-green)">✓ Mesaj uğurla Discord kanalınıza çatdırıldı! Çox sağ ol ${name}.</span>`;
+                            } else {
+                                formStatus.innerHTML = `<span style="color:var(--color-green)">✓ Mesaj uğurla verilənlər bazasında yadda saxlanıldı! Çox sağ ol ${name}.</span>`;
+                            }
                         }
-                    } catch (err) {}
-                }
-
-                if (!targetWebhookUrl) {
-                    targetWebhookUrl = localStorage.getItem('rauf_discord_webhook');
-                }
-
-                if (!targetWebhookUrl) {
-                    if (formStatus) {
-                        formStatus.innerHTML = `<span style="color:var(--color-green)">✓ Mesaj uğurla göndərildi və yadda saxlanıldı! Çox sağ ol ${name}.</span>`;
+                        contactForm.reset();
+                        return;
                     }
-                    contactForm.reset();
-                    return;
                 }
 
-                const discordData = {
-                    embeds: [{
-                        title: "📩 New Support Message (Discord)",
-                        color: 5814783,
-                        fields: [
-                            { name: "👤 Sender", value: `${name} (${tag})`, inline: true },
-                            { name: "💬 Message", value: message }
-                        ],
-                        timestamp: new Date().toISOString(),
-                        footer: { text: "CyberRFG Portfolio System" }
-                    }]
-                };
-
-                const response = await fetch(targetWebhookUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(discordData)
-                });
-
-                if (response.ok || response.status === 204) {
-                    if (formStatus) {
-                        formStatus.innerHTML = `<span style="color:var(--color-green)">✓ Mesaj uğurla Discord kanalınıza çatdırıldı! Çox sağ ol ${name}.</span>`;
-                    }
-                    contactForm.reset();
-                } else {
-                    throw new Error('Discord response error.');
+                if (formStatus) {
+                    formStatus.innerHTML = `<span style="color:var(--color-green)">✓ Mesaj qeydə alındı! Çox sağ ol ${name}.</span>`;
                 }
+                contactForm.reset();
             } catch (err) {
                 console.error(err);
                 if (formStatus) {
