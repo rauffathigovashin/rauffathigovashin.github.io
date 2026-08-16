@@ -1,0 +1,6 @@
+name = "cyberrfg-api"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+TURSO_URL = "https://portfolio-rauffathigovashin.aws-eu-west-1.turso.io"

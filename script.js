@@ -226,10 +226,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 120);
     }
 
-    const SUPABASE_URL = 'https://mdhesolqkvjyzrcqtzer.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_nkYW2XQTbDB_A4bgSVyuBg_ytD38-Ol';
-
-    const supabaseClient = (window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+    const WORKER_API_URL = 'https://solitary-cake-57a1.rauffathi2005.workers.dev'; 
 
     let currentUser = null;
     let loadedProjectsData = [];
@@ -291,11 +288,18 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!portfolioGrid) return;
         loadedProjectsData = [];
 
-        if (supabaseClient) {
+        if (WORKER_API_URL) {
             try {
-                const { data, error } = await supabaseClient.from('portfolio_projects').select('*').order('id', { ascending: false });
-                if (!error && data && data.length > 0) loadedProjectsData = data;
-            } catch (e) {}
+                const res = await fetch(`${WORKER_API_URL}/api/projects`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success && data.projects && data.projects.length > 0) {
+                        loadedProjectsData = data.projects;
+                    }
+                }
+            } catch (e) {
+                console.error('Worker loadProjects error:', e);
+            }
         }
 
         if (loadedProjectsData.length === 0) loadedProjectsData = [...initialProjects];
@@ -336,11 +340,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function loadStatus() {
-        if (supabaseClient) {
+        if (WORKER_API_URL) {
             try {
-                const { data, error } = await supabaseClient.from('portfolio_status').select('content').limit(1).single();
-                if (!error && data) updateStatusUI(data.content);
-                else updateStatusUI('Kiber Təhlükəsizlik öyrənirəm');
+                const res = await fetch(`${WORKER_API_URL}/api/status`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success && data.status) {
+                        updateStatusUI(data.status);
+                    } else {
+                        updateStatusUI('Kiber Təhlükəsizlik öyrənirəm');
+                    }
+                }
             } catch (e) {
                 updateStatusUI('Kiber Təhlükəsizlik öyrənirəm');
             }
@@ -394,16 +404,16 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 let targetWebhookUrl = null;
 
-                if (supabaseClient) {
+                if (WORKER_API_URL) {
                     try {
-                        const { data, error } = await supabaseClient
-                            .from('portfolio_config')
-                            .select('discord_webhook')
-                            .eq('id', 1)
-                            .single();
-
-                        if (!error && data && data.discord_webhook) {
-                            targetWebhookUrl = data.discord_webhook;
+                        const res = await fetch(`${WORKER_API_URL}/api/contact`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name, contact: tag, message })
+                        });
+                        if (res.ok) {
+                            const data = await res.json();
+                            if (data.webhook) targetWebhookUrl = data.webhook;
                         }
                     } catch (err) {}
                 }
@@ -413,9 +423,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 if (!targetWebhookUrl) {
-                    if (supabaseClient) {
-                        await supabaseClient.from('portfolio_messages').insert([{ name: name, contact: tag, message: message }]);
-                    }
                     if (formStatus) {
                         formStatus.innerHTML = `<span style="color:var(--color-green)">✓ Mesaj uğurla göndərildi və yadda saxlanıldı! Çox sağ ol ${name}.</span>`;
                     }
@@ -470,7 +477,7 @@ document.addEventListener('DOMContentLoaded', function () {
         adminModal.classList.add('active');
 
         if (mode === 'login') {
-            adminModalTitle.textContent = 'Supabase Admin Authentication';
+            adminModalTitle.textContent = 'Turso Admin Authentication';
             adminLoginFields.classList.remove('hidden');
             if (adminTabButtons) adminTabButtons.classList.add('hidden');
             adminStatusFields.classList.add('hidden');
@@ -531,28 +538,41 @@ document.addEventListener('DOMContentLoaded', function () {
                 const pass = document.getElementById('admin-pass').value;
                 if (!email || !pass) { alert('Zəhmət olmasa email/username və parolu daxil edin!'); return; }
 
-                if (supabaseClient) {
-                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
-                    if (error) {
-                        alert('Giriş xətası: ' + error.message);
-                    } else {
-                        currentUser = data.user;
+                try {
+                    let isValid = false;
+                    if (WORKER_API_URL) {
+                        const res = await fetch(`${WORKER_API_URL}/api/admin/login`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ password: pass })
+                        });
+                        if (res.ok) {
+                            const data = await res.json();
+                            if (data.success) isValid = true;
+                        }
+                    }
+
+                    if (isValid) {
+                        currentUser = { email, pass };
                         document.getElementById('admin-btn-text').textContent = 'Admin (Logged In)';
                         alert('Uğurla giriş edildi! Salam Admin.');
                         openAdminModal('status');
+                    } else {
+                        alert('Giriş xətası: Yanlış parol!');
                     }
-                } else {
-                    currentUser = { email };
-                    document.getElementById('admin-btn-text').textContent = 'Admin Mode';
-                    alert('Offline Admin Rejimi Aktivləşdirildi.');
-                    openAdminModal('status');
+                } catch (err) {
+                    alert('Giriş xətası: ' + err.message);
                 }
             } else if (currentMode === 'status') {
                 const newStatus = document.getElementById('status-text-input').value;
                 if (newStatus) {
                     updateStatusUI(newStatus);
-                    if (supabaseClient) {
-                        await supabaseClient.from('portfolio_status').upsert({ id: 1, content: newStatus });
+                    if (WORKER_API_URL && currentUser?.pass) {
+                        await fetch(`${WORKER_API_URL}/api/admin/status`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ password: currentUser.pass, status: newStatus })
+                        });
                     }
                     alert('Status yeniləndi!');
                     adminModal.classList.remove('active');
@@ -562,13 +582,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 const desc = document.getElementById('proj-desc').value;
                 const img = document.getElementById('proj-img').value;
                 const github = document.getElementById('proj-github').value;
-                const tags = document.getElementById('proj-tags').value.split(',').map(t => t.trim());
+                const tagsArr = document.getElementById('proj-tags').value.split(',').map(t => t.trim());
 
                 if (name && desc) {
-                    const newProj = { name, description: desc, image_url: img || defaultTechCover, github_link: github, tags };
+                    const newProj = { name, description: desc, image_url: img || defaultTechCover, github_link: github, tags: tagsArr };
                     initialProjects.unshift(newProj);
-                    if (supabaseClient) {
-                        await supabaseClient.from('portfolio_projects').insert([newProj]);
+                    if (WORKER_API_URL && currentUser?.pass) {
+                        await fetch(`${WORKER_API_URL}/api/admin/project/add`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ password: currentUser.pass, name, description: desc, image_url: img || defaultTechCover, github_link: github, tags: tagsArr })
+                        });
                     }
                     loadProjects();
                     alert(`"${name}" proyekti müvəffəqiyyətlə əlavə edildi!`);
@@ -581,12 +605,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (selectedName) {
                     if (confirm(`"${selectedName}" proyektini silməyə əminsiniz?`)) {
                         loadedProjectsData = loadedProjectsData.filter(p => p.name !== selectedName);
-                        initialProjects.forEach((p, idx) => {
-                            if (p.name === selectedName) initialProjects.splice(idx, 1);
-                        });
-
-                        if (supabaseClient) {
-                            await supabaseClient.from('portfolio_projects').delete().eq('name', selectedName);
+                        if (WORKER_API_URL && currentUser?.pass) {
+                            await fetch(`${WORKER_API_URL}/api/admin/project/delete`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ password: currentUser.pass, name: selectedName })
+                            });
                         }
                         loadProjects();
                         alert(`"${selectedName}" proyekti silindi!`);
@@ -627,27 +651,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 <p><strong>theme &lt;cyan/green/crimson/purple/amber&gt;</strong> - Switches page accent theme!</p>
                 <p><strong>whoami</strong> - Displays 0x52415546 developer identity</p>
                 <p><strong>contact</strong> - Displays Discord, Email & GitHub links</p>
-                <p><strong>login</strong> - Opens Supabase Admin Auth login</p>
+                <p><strong>login</strong> - Opens Turso Admin Auth login</p>
                 <p><strong>sudo</strong> - Evaluates root privileges</p>
                 <p><strong>clear</strong> - Clears terminal output</p>
             `);
         },
 
         messages: async () => {
-            appendTerminal('<p style="color:var(--color-cyan)">Fetching messages from Supabase Database...</p>');
-            if (supabaseClient) {
+            appendTerminal('<p style="color:var(--color-cyan)">Fetching messages from Turso Database via Worker Proxy...</p>');
+            if (WORKER_API_URL && currentUser?.pass) {
                 try {
-                    const { data, error } = await supabaseClient.from('portfolio_messages').select('*').order('id', { ascending: false });
-                    if (!error && data && data.length > 0) {
-                        data.forEach((m, idx) => {
-                            appendTerminal(`
-                                <p style="color:var(--color-green)">
-#${idx + 1} From: <strong>${m.name}</strong> (${m.contact || m.email})<br>
+                    const res = await fetch(`${WORKER_API_URL}/api/admin/messages`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password: currentUser.pass })
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.success && data.messages && data.messages.length > 0) {
+                            data.messages.forEach((m, idx) => {
+                                appendTerminal(`
+                                    <p style="color:var(--color-green)">
+#${idx + 1} From: <strong>${m.name}</strong> (${m.contact || ''})<br>
 Message: "${m.message}"
-                                </p>
-                            `);
-                        });
-                        return;
+                                    </p>
+                                `);
+                            });
+                            return;
+                        }
                     }
                 } catch(e) {}
             }
@@ -704,7 +735,7 @@ Vulnerabilities: 0 Critical (Protected by CyberShield)
                 <p style="color:var(--color-cyan)">[CORE SKILLS & TECH STACK]</p>
                 <p>• <strong>Languages:</strong> Python, JavaScript (ES6+), HTML5/CSS3, SQL, Java</p>
                 <p>• <strong>Security & Pentesting:</strong> Scapy, BeautifulSoup4, Requests, Socket API, Nmap, Wireshark, OSINT</p>
-                <p>• <strong>Frameworks & DB:</strong> Supabase, Flask, Tkinter, REST APIs</p>
+                <p>• <strong>Frameworks & DB:</strong> Turso (libSQL), Flask, Tkinter, REST APIs</p>
             `);
         },
 
@@ -723,7 +754,7 @@ Vulnerabilities: 0 Critical (Protected by CyberShield)
         },
 
         login: () => openAdminModal('login'),
-        setup: () => appendTerminal('<p style="color:var(--color-green)">✓ 0x52415546 System Core & Supabase DB synced.</p>'),
+        setup: () => appendTerminal('<p style="color:var(--color-green)">✓ 0x52415546 System Core & Turso DB synced.</p>'),
         projects: () => { loadProjects(); appendTerminal('<p style="color:var(--color-green)">✓ 16 Projects reloaded on portfolio grid.</p>'); },
         whoami: () => appendTerminal('<p style="color:var(--color-cyan)">0x52415546 // Rauf Fathi Govashin (RaufFathi / CyberRFG)</p>'),
         contact: () => {
